@@ -1,3 +1,6 @@
+- name: Accept Licenses
+  run: yes | sdkmanager --licenses
+
 name: Build APK
 
 on:
