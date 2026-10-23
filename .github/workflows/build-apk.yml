@@ -34,11 +34,12 @@ jobs:
           gradle-version: '8.9'
 
       - name: Prepare stable signing key (if configured)
-        if: ${{ env.KEYSTORE_BASE64 != '' }}
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > app/upload-keystore.jks
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 --decode > app/upload-keystore.jks
+          fi
 
       - name: Build APK
         env:
