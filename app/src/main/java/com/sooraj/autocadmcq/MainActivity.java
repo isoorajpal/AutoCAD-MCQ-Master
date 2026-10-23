@@ -7,10 +7,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
+  private WebView web;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    WebView web = new WebView(this);
+    web = new WebView(this);
     web.setBackgroundColor(0xFF081225);
     WebSettings settings = web.getSettings();
     settings.setJavaScriptEnabled(true);
@@ -22,7 +24,19 @@ public class MainActivity extends Activity {
   }
 
   @Override
+  @SuppressWarnings("deprecation")
   public void onBackPressed() {
-    super.onBackPressed();
+    if (web == null) {
+      super.onBackPressed();
+      return;
+    }
+    web.evaluateJavascript(
+      "window.handleAndroidBack ? window.handleAndroidBack() : false",
+      value -> {
+        if (!"true".equals(value)) {
+          MainActivity.super.onBackPressed();
+        }
+      }
+    );
   }
 }
